@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useAppStore } from './store'
-import { api } from './api'
+import { api, API_BASE } from './api'
 import { audioPlayer } from './services/AudioPlayer'
 import { AmbientCanvas } from './components/Ambient/AmbientCanvas'
 import { DynamicIsland } from './components/DynamicIsland/DynamicIsland'
@@ -70,7 +70,7 @@ function App() {
     // Otherwise fetch from backend
     let cancelled = false
     const controller = new AbortController()
-    fetch(`/api/library/tracks/${nowPlaying.id}/palette`, { signal: controller.signal })
+    fetch(`${API_BASE}/api/library/tracks/${nowPlaying.id}/palette`, { signal: controller.signal })
       .then((res) => { if (!res.ok) throw new Error(); return res.json() })
       .then((pal: any) => {
         if (cancelled) return
@@ -150,8 +150,8 @@ function App() {
 
         if (data.type === 'playlist') {
           const [plRes, tracksRes] = await Promise.all([
-            fetch(`/api/playlists/${data.playlistId}`),
-            fetch(`/api/playlists/${data.playlistId}/tracks`),
+            fetch(`${API_BASE}/api/playlists/${data.playlistId}`),
+            fetch(`${API_BASE}/api/playlists/${data.playlistId}/tracks`),
           ])
           const pl = await plRes.json()
           const tracks: any[] = await tracksRes.json()
@@ -225,7 +225,11 @@ function App() {
     }
     const onDropFiles = (e: DragEvent) => {
       dragCount = 0; setDragActive(false); setDragProximity(0, 0)
-      if (window.electronAPI) {
+      const file = e.dataTransfer?.files?.[0]
+      if (file && window.electronAPI?.getFilePath) {
+        const path = window.electronAPI.getFilePath(file)
+        if (path) api.startImport(path).catch(console.error)
+      } else if (window.electronAPI) {
         window.electronAPI.selectFolder().then((path) => {
           if (path) api.startImport(path).catch(console.error)
         })

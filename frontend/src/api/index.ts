@@ -1,7 +1,10 @@
 import axios from 'axios'
 
+const isFileProtocol = window.location.protocol === 'file:'
+const API_BASE = isFileProtocol ? 'http://localhost:8000' : ''
+
 const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: `${API_BASE}/api`,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -19,7 +22,7 @@ export const api = {
   getAlbumTracks: (albumId: string) =>
     apiClient.get(`/library/albums/${albumId}/tracks`).then((r) => r.data),
 
-  getStreamUrl: (trackId: string) => `/api/playback/stream/${trackId}`,
+  getStreamUrl: (trackId: string) => `${API_BASE}/api/playback/stream/${trackId}`,
 
   startImport: (path: string) =>
     apiClient.post('/import/start', { path }).then((r) => r.data),
@@ -34,6 +37,6 @@ export const api = {
     apiClient.patch('/settings', data).then((r) => r.data),
 }
 
-export { apiClient }
+export { apiClient, API_BASE }
 
 export * from './client'

@@ -11,8 +11,9 @@ export function useWebSocket() {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>()
 
   const connect = () => {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const host = window.location.host
+    const isFileProtocol = window.location.protocol === 'file:'
+    const protocol = 'ws:'
+    const host = isFileProtocol ? 'localhost:8000' : window.location.host
     const ws = new WebSocket(`${protocol}//${host}/ws`)
 
     ws.onopen = () => {

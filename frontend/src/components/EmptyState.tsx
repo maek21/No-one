@@ -23,27 +23,25 @@ export function EmptyState() {
   const handleDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
-    
+
+    const file = e.dataTransfer?.files?.[0]
+    if (file && (window as any).electronAPI?.getFilePath) {
+      const path = (window as any).electronAPI.getFilePath(file)
+      if (path) importMutation.mutate(path)
+      return
+    }
+
     const items = Array.from(e.dataTransfer.items)
-    
+
     for (const item of items) {
       if (item.kind === 'file') {
         const entry = item.webkitGetAsEntry()
         if (entry?.isDirectory) {
-          // Get the full path (this is browser-specific)
-          const folderPath = (entry as any).fullPath || entry.name
-          
-          console.log('Dropped folder:', entry.name)
-          
-          // Prompt user for full path (browsers don't give full filesystem path)
           const path = prompt(
             `Enter the full path to "${entry.name}" folder:`,
             `C:\\Users\\YourName\\Music\\${entry.name}`
           )
-          
-          if (path) {
-            importMutation.mutate(path)
-          }
+          if (path) importMutation.mutate(path)
         }
       }
     }
