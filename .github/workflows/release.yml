@@ -17,7 +17,7 @@ jobs:
         include:
           - os: windows-latest
             electron-target: --win
-            artifact-path: release\*.exe
+            artifact-path: release/*.exe
 
           - os: macos-latest
             electron-target: --mac
@@ -86,7 +86,7 @@ jobs:
           CSC_KEY_PASSWORD: ""
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
-      - run: ls -la release/ && echo "--- artifact path: ${{ matrix.artifact-path }}"
+      - run: ls -la release/ && echo "artifact_path=${{ matrix.artifact-path }}"
 
       - uses: actions/upload-artifact@v4
         with:
