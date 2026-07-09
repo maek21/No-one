@@ -18,22 +18,19 @@ jobs:
           - os: windows-latest
             electron-target: --win
             artifact-path: release/*.exe
-            shell: pwsh
 
           - os: macos-latest
             electron-target: --mac
             artifact-path: release/*.dmg
-            shell: bash
 
           - os: ubuntu-latest
             electron-target: --linux deb
             artifact-path: release/*.deb
-            shell: bash
 
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        shell: ${{ matrix.shell }}
+        shell: bash
 
     steps:
       - uses: actions/checkout@v4
@@ -88,3 +85,4 @@ jobs:
         with:
           name: No-one-${{ matrix.os }}-${{ github.ref_name }}
           path: ${{ matrix.artifact-path }}
+          if-no-files-found: warn
