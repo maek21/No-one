@@ -77,8 +77,6 @@ jobs:
       - name: Package
         run: npx electron-builder ${{ matrix.electron-target }}
         env:
-          CSC_LINK: ""
-          CSC_KEY_PASSWORD: ""
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - uses: actions/upload-artifact@v4

@@ -107,7 +107,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,
+    console=sys.platform == 'darwin',  # macOS: plain binary (no .app bundle)
     disable_windowed_traceback=False,
     argv_emulation=False,
 )
