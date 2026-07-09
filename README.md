@@ -1,5 +1,5 @@
 # No-one.
-
+<img width="1080" height="270" alt="Frame 8" src="https://github.com/user-attachments/assets/85f69d7e-6363-4c3f-94ca-2097ddc70d4c" />
 > Music is the only designer.
 
 A desktop music player where the interface is transformed by your music.
@@ -72,3 +72,5 @@ The installers will be in the `release/` directory.
 - **Backend**: Python 3.12+ / FastAPI
 - **Database**: SQLite (via SQLAlchemy async)
 - **Desktop**: Electron (with standalone PyInstaller backend)
+
+<img width="128" height="128" alt="icon" src="https://github.com/user-attachments/assets/e57b14ac-399e-4ea7-bbfb-237c2c85b166" />
