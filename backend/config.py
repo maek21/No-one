@@ -1,14 +1,24 @@
 """Configuration settings for NO-ONE backend"""
 
-from pydantic_settings import BaseSettings
-from pathlib import Path
+import os
 import sys
+from pathlib import Path
+
+from pydantic_settings import BaseSettings
 
 
-def _get_base_dir() -> Path:
-    """Get the base directory for data storage (DB, cache, artwork)"""
+def _get_data_dir() -> Path:
+    """Get the user-writable data directory (DB, cache, artwork)"""
     if getattr(sys, 'frozen', False):
-        return Path(sys.executable).parent
+        # Installed app — use user's app data dir
+        if sys.platform == "win32":
+            base = Path(os.environ.get("APPDATA", Path.home() / "AppData" / "Roaming"))
+        elif sys.platform == "darwin":
+            base = Path.home() / "Library" / "Application Support"
+        else:
+            base = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local" / "share"))
+        return base / "No-one"
+    # Dev mode — use CWD
     return Path(".")
 
 
@@ -52,7 +62,7 @@ class Settings(BaseSettings):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        base = _get_base_dir()
+        base = _get_data_dir()
         self.cache_dir = str(base / "cache")
         self.artwork_cache_dir = str(base / "cache" / "artwork")
         self.waveform_cache_dir = str(base / "cache" / "waveforms")
