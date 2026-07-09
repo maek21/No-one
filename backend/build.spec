@@ -111,12 +111,18 @@ exe = EXE(
     argv_emulation=False,
 )
 
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.datas,
-    strip=False,
-    upx=True,
-    upx_exclude=[],
-    name='no-one-backend',
-)
+if sys.platform == 'darwin':
+    # On macOS, EXE creates a file at dist/no-one-backend.
+    # COLLECT with the same name fails because a dir can't replace a file.
+    # Use one-file mode instead (no COLLECT).
+    coll = None
+else:
+    coll = COLLECT(
+        exe,
+        a.binaries,
+        a.datas,
+        strip=False,
+        upx=True,
+        upx_exclude=[],
+        name='no-one-backend',
+    )
