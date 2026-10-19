@@ -3,6 +3,7 @@ NO-ONE Backend Server
 Main FastAPI application entry point.
 """
 
+import asyncio
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -11,10 +12,11 @@ from loguru import logger
 import sys
 from pathlib import Path
 
-from api import library, playback, import_api, settings, lyrics, analysis, playlists
+from api import library, playback, import_api, settings, lyrics, analysis, playlists, yandex
 from websocket.manager import ws_manager, websocket_endpoint_handler
 from services.audio import AudioPlayer
 from db.database import init_database
+from services.yandex import yandex_service
 
 
 # Global instances
@@ -33,11 +35,15 @@ async def lifespan(app: FastAPI):
     # Initialize audio player
     await audio_player.initialize()
     logger.info("✓ Audio player initialized")
-    
+
+    # Restore Yandex Music session in the background so a slow/unreachable network never delays startup
+    asyncio.create_task(yandex_service.startup())
+
     yield
     
     # Cleanup
     logger.info("🎵 NO-ONE Backend shutting down...")
+    await yandex_service.shutdown()
     await audio_player.cleanup()
     logger.info("✓ Cleanup complete")
 
@@ -73,6 +79,8 @@ app.include_router(settings.router, prefix="/api/settings", tags=["settings"])
 app.include_router(lyrics.router, prefix="/api/lyrics", tags=["lyrics"])
 app.include_router(analysis.router, prefix="/api/analysis", tags=["analysis"])
 app.include_router(playlists.router, prefix="/api/playlists", tags=["playlists"])
+app.include_router(yandex.router, prefix="/api/yandex", tags=["yandex"])
+yandex.register_error_handlers(app)
 
 # WebSocket endpoint
 @app.websocket("/ws")

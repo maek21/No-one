@@ -1,4 +1,6 @@
 import type { Track, Album, QueueTrack, Palette, Playlist, PlaylistTrack } from './models'
+import type { YmStatus } from './yandex'
+import type { SourceMode } from '../utils/source'
 
 export type IslandState = 'idle' | 'playing' | 'importing' | 'editing'
 
@@ -15,6 +17,12 @@ export interface AppState {
   // Connection
   isConnected: boolean
   setConnected: (connected: boolean) => void
+
+  // Source mode: offline library vs. Yandex Music
+  sourceMode: SourceMode
+  setSourceMode: (mode: SourceMode) => void
+  yandexStatus: YmStatus | null
+  setYandexStatus: (status: YmStatus | null) => void
 
   // Library
   library: Track[]

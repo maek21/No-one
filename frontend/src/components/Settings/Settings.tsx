@@ -3,6 +3,7 @@ import { useAppStore } from '../../store'
 import { api } from '../../api'
 import { libraryApi } from '../../api/client'
 import type { GlassSettings } from '../../types/state'
+import { YandexAccountPanel } from '../Yandex/YandexAccount'
 
 const MIX_BLEND_MODES = ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity', 'plus-darker', 'plus-lighter']
 const CHANNELS = ['R', 'G', 'B']
@@ -126,6 +127,15 @@ export function SettingsView() {
           <InputField label="Last.fm API Key" value={lastfmKey} onChange={setLastfmKey} placeholder="your_lastfm_api_key" onBlur={saveApiKeys} />
           <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', marginTop: 4 }}>
             Keys are saved to the database. Get Discogs token at discogs.com/settings, Last.fm key at last.fm/api
+          </div>
+        </div>
+
+        {/* Yandex Music */}
+        <div>
+          <h3 style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginBottom: 12, letterSpacing: 0.5, textTransform: 'uppercase' }}>Yandex Music</h3>
+          <YandexAccountPanel />
+          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', marginTop: 8 }}>
+            Switch between Local and Yandex with the toggle in the tab bar. The session token is stored locally and never sent anywhere but Yandex.
           </div>
         </div>
 

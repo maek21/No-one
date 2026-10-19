@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron')
 const path = require('path')
 const { spawn } = require('child_process')
 const http = require('http')
@@ -75,6 +75,12 @@ function createWindow() {
       nodeIntegration: false,
     },
     show: false,
+  })
+
+  // window.open() from the renderer (e.g. the Yandex sign-in page) goes to the system browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (/^https?:\/\//.test(url)) shell.openExternal(url)
+    return { action: 'deny' }
   })
 
   mainWindow.once('ready-to-show', () => {

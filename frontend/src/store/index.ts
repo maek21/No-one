@@ -9,6 +9,12 @@ export const useStore = create<AppState>((set, get) => ({
   isConnected: false,
   setConnected: (connected) => set({ isConnected: connected }),
 
+  // ── Source mode ──
+  sourceMode: 'local',
+  setSourceMode: (mode) => set({ sourceMode: mode }),
+  yandexStatus: null,
+  setYandexStatus: (status) => set({ yandexStatus: status }),
+
   // ── Library ──
   library: [],
   albums: [],

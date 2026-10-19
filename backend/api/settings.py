@@ -18,7 +18,11 @@ DEFAULT_SETTINGS = {
     "theme": "auto",
     "discogs_token": "",
     "lastfm_api_key": "",
+    "source_mode": "local",  # "local" | "yandex"
 }
+
+# Stored in app_settings but managed by dedicated endpoints — never returned here
+_PRIVATE_KEYS = {"yandex_token"}
 
 # Global cache for API keys (updated on PATCH, read by pipeline steps)
 _api_keys: dict[str, str] = {}
@@ -42,6 +46,8 @@ async def get_settings(db: AsyncSession = Depends(get_db)):
     # Merge with defaults (DB value overrides default)
     settings = dict(DEFAULT_SETTINGS)
     for row in rows:
+        if row.key in _PRIVATE_KEYS:
+            continue
         try:
             settings[row.key] = json.loads(row.value)
         except (json.JSONDecodeError, TypeError):
@@ -57,6 +63,8 @@ async def update_settings(payload: dict, db: AsyncSession = Depends(get_db)):
     now = datetime.utcnow()
 
     for key, value in payload.items():
+        if key in _PRIVATE_KEYS:
+            continue
         # Upsert: insert or update existing row
         existing = await db.execute(select(AppSetting).where(AppSetting.key == key))
         row = existing.scalar_one_or_none()
@@ -79,6 +87,8 @@ async def update_settings(payload: dict, db: AsyncSession = Depends(get_db)):
     rows = result.scalars().all()
     settings = dict(DEFAULT_SETTINGS)
     for row in rows:
+        if row.key in _PRIVATE_KEYS:
+            continue
         try:
             settings[row.key] = json.loads(row.value)
         except (json.JSONDecodeError, TypeError):

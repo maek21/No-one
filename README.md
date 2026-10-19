@@ -12,6 +12,20 @@ A desktop music player where the interface is transformed by your music.
 - Metadata enrichment pipeline (MusicBrainz, Discogs, Last.fm)
 - Waveform audio player with crossfade
 - Queue management, playlists, and lyrics view
+- **Yandex Music mode** — switch from your offline library to streaming (search, charts, your likes & playlists)
+
+## Yandex Music mode
+
+Use the **Local / Yandex** toggle in the tab bar. In Yandex mode every screen is backed by Yandex Music:
+Home (charts, new releases, made-for-you), Search (tracks / albums / artists / playlists), and your Collection
+(likes, playlists, albums, artists). Streaming, covers, lyrics and the cover-driven palette all work like local tracks,
+and tracks can be dragged onto the island or queued as usual.
+
+Sign in from the Yandex screen or **Settings → Yandex Music** ("Sign in with Yandex" shows a code to confirm in the browser;
+you can also paste an OAuth token). The token is stored in the local database and used only against Yandex.
+Playback quality depends on your Yandex Plus subscription, and the service is only reachable from supported regions.
+
+Built on the unofficial [`yandex-music`](https://github.com/MarshalX/yandex-music-api) client — not affiliated with Yandex.
 
 ## Download
 

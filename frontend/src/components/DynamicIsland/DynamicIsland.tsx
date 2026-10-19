@@ -387,6 +387,7 @@ function SourceBadge({ source }: { source?: string }) {
     filename: '#f59e0b',
     folder: '#8b5cf6',
     musicbrainz: '#06b6d4',
+    yandex: '#ffcc00',
   }
   return (
     <div style={{
@@ -397,7 +398,7 @@ function SourceBadge({ source }: { source?: string }) {
       border: `1px solid ${(colors[source] || '#888')}40`,
       lineHeight: '14px', flexShrink: 0,
     }}>
-      {source === 'filename' ? 'FILE' : source === 'folder' ? 'FOLDER' : source === 'musicbrainz' ? 'MB' : source}
+      {source === 'filename' ? 'FILE' : source === 'folder' ? 'FOLDER' : source === 'musicbrainz' ? 'MB' : source === 'yandex' ? 'YM' : source}
     </div>
   )
 }

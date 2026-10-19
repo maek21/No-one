@@ -47,7 +47,7 @@ export interface QueueTrack {
   duration: number
   artwork: string | null
   palette: Palette | string[] | null
-  source?: string  // "tag" | "filename" | "folder" | "musicbrainz"
+  source?: string  // "tag" | "filename" | "folder" | "musicbrainz" | "yandex"
 }
 
 export interface Playlist {

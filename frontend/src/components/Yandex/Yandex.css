@@ -1,0 +1,111 @@
+/* Yandex Music views. Grids/cards reuse the classes from Library.css. */
+
+.ym-card { cursor: pointer; }
+.ym-section { margin-bottom: 32px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+/* ── Track list ── */
+.ym-tracklist { display: flex; flex-direction: column; gap: 1px; }
+
+.ym-track {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px; border-radius: 6px;
+  cursor: pointer; transition: background 0.1s; user-select: none;
+}
+.ym-track:hover { background: rgba(255, 255, 255, 0.06); }
+.ym-track.current .track-title { color: #fff; }
+.ym-track.unavailable { opacity: 0.35; cursor: default; }
+.ym-track.unavailable:hover { background: none; }
+
+.ym-track-index { font-size: 11px; color: rgba(255, 255, 255, 0.3); width: 22px; text-align: right; flex-shrink: 0; }
+.ym-track-cover { width: 36px; height: 36px; border-radius: 6px; overflow: hidden; background: rgba(255, 255, 255, 0.04); flex-shrink: 0; }
+.ym-track-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.ym-explicit {
+  display: inline-block; margin-left: 6px; padding: 0 4px; border-radius: 3px;
+  font-size: 9px; line-height: 13px; color: rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.1);
+}
+
+.ym-like {
+  background: none; border: none; cursor: pointer; padding: 4px;
+  color: rgba(255, 255, 255, 0.2); opacity: 0; transition: color 0.15s, opacity 0.15s;
+}
+.ym-track:hover .ym-like, .ym-like.on { opacity: 1; }
+.ym-like.on { color: #ff5a6e; }
+.ym-like:hover { color: #ff5a6e; }
+
+/* ── Search ── */
+.ym-searchbar { position: relative; max-width: 560px; margin-bottom: 14px; }
+.ym-searchbar input {
+  width: 100%; padding: 11px 14px; border-radius: 12px; outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9); font-size: 14px;
+}
+.ym-searchbar input:focus { border-color: rgba(255, 255, 255, 0.3); }
+.ym-suggest {
+  position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 20; overflow: hidden;
+  border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(24, 26, 32, 0.96);
+  backdrop-filter: blur(20px);
+}
+.ym-suggest div { padding: 8px 14px; font-size: 13px; color: rgba(255, 255, 255, 0.7); cursor: pointer; }
+.ym-suggest div:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+.ym-notice { padding: 28px 4px; font-size: 13px; color: rgba(255, 255, 255, 0.35); }
+
+/* ── Buttons ── */
+.ym-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border-radius: 9px; cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.75); font-size: 12px; font-weight: 500; transition: all 0.15s;
+}
+.ym-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.ym-btn:disabled { opacity: 0.5; cursor: default; }
+.ym-btn.primary { background: #fff; border-color: #fff; color: #000; font-weight: 600; }
+.ym-btn.primary:hover:not(:disabled) { background: rgba(255, 255, 255, 0.85); color: #000; }
+
+.ym-link { background: none; border: none; padding: 0; font-size: 12px; color: rgba(255, 255, 255, 0.45); cursor: pointer; text-decoration: underline; }
+.ym-link:hover { color: rgba(255, 255, 255, 0.8); }
+
+/* ── Detail header ── */
+.ym-back { background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 16px; font-size: 12px; color: rgba(255, 255, 255, 0.45); }
+.ym-back:hover { color: #fff; }
+.ym-hero { display: flex; gap: 22px; align-items: flex-end; margin-bottom: 26px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+.ym-hero-art { width: 180px; height: 180px; border-radius: 12px; overflow: hidden; background: rgba(255, 255, 255, 0.05); flex-shrink: 0; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+.ym-hero-art.round { border-radius: 50%; }
+.ym-hero-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ym-hero-info { min-width: 0; }
+.ym-hero-info h1 { margin: 0 0 6px; font-size: 26px; font-weight: 700; color: rgba(255, 255, 255, 0.95); }
+.ym-hero-line { font-size: 13px; color: rgba(255, 255, 255, 0.45); margin-top: 2px; }
+
+/* ── Account / sign-in ── */
+.ym-gate { max-width: 420px; margin: 8vh auto 0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.ym-gate-title { font-size: 28px; font-weight: 300; letter-spacing: 1px; color: rgba(255, 255, 255, 0.85); }
+.ym-gate-sub { font-size: 13px; line-height: 1.5; color: rgba(255, 255, 255, 0.35); margin-bottom: 8px; }
+
+.ym-account-signin { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.ym-account {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px;
+  border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.03);
+}
+.ym-account-name { font-size: 14px; font-weight: 600; color: rgba(255, 255, 255, 0.9); }
+.ym-account-meta { font-size: 11px; color: rgba(255, 255, 255, 0.35); margin-top: 2px; }
+.ym-device { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.ym-device-code { font-size: 30px; font-weight: 700; letter-spacing: 6px; color: #fff; font-variant-numeric: tabular-nums; }
+.ym-token-row { display: flex; gap: 8px; width: 100%; }
+.ym-token-row input {
+  flex: 1; padding: 8px 10px; border-radius: 8px; outline: none; font-size: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.85);
+}
+.ym-error { font-size: 12px; color: #ff7a85; }
+
+/* ── Mode switch (TabBar) ── */
+.ym-mode {
+  display: flex; gap: 2px; padding: 2px; margin-right: 6px; border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05); position: relative; z-index: 1;
+}
+.ym-mode button {
+  background: none; border: none; cursor: pointer; padding: 4px 10px; border-radius: 10px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.3px; color: rgba(255, 255, 255, 0.4); transition: all 0.15s;
+}
+.ym-mode button.active { background: rgba(255, 255, 255, 0.14); color: #fff; }
+.ym-mode button:hover:not(.active) { color: rgba(255, 255, 255, 0.7); }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useAppStore } from './store'
 import { api, API_BASE } from './api'
+import { yandexApi } from './api/yandex'
 import { audioPlayer } from './services/AudioPlayer'
 import { AmbientCanvas } from './components/Ambient/AmbientCanvas'
 import { DynamicIsland } from './components/DynamicIsland/DynamicIsland'
@@ -10,6 +11,7 @@ import { LyricsView } from './components/Lyrics/Lyrics'
 import { QueueView } from './components/Queue/Queue'
 import { SettingsView } from './components/Settings/Settings'
 import { PlaylistsView } from './components/Playlists/PlaylistsView'
+import { YandexView } from './components/Yandex/YandexView'
 import { useWebSocket } from './hooks/useWebSocket'
 import type { ViewId } from './components/TabBar/TabBar'
 import type { QueueTrack } from './types/models'
@@ -34,6 +36,8 @@ function App() {
   const { connected } = useWebSocket()
 
   const setGlassSettings = useAppStore((s) => s.setGlassSettings)
+  const setSourceMode = useAppStore((s) => s.setSourceMode)
+  const setYandexStatus = useAppStore((s) => s.setYandexStatus)
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeView, setActiveView] = useState<ViewId>('library')
   const [folderInput, setFolderInput] = useState<string>('')
@@ -67,10 +71,13 @@ function App() {
       }
     }
 
-    // Otherwise fetch from backend
+    // Otherwise fetch from backend (local tracks: embedded art; Yandex tracks: the cover URL)
+    const paletteUrl = api.getPaletteUrl(nowPlaying)
+    if (!paletteUrl) return
+
     let cancelled = false
     const controller = new AbortController()
-    fetch(`${API_BASE}/api/library/tracks/${nowPlaying.id}/palette`, { signal: controller.signal })
+    fetch(paletteUrl, { signal: controller.signal })
       .then((res) => { if (!res.ok) throw new Error(); return res.json() })
       .then((pal: any) => {
         if (cancelled) return
@@ -122,11 +129,21 @@ function App() {
     if (!connected) return
     let cancelled = false
     api.getSettings().then((data: any) => {
-      if (cancelled || !data.glass) return
-      setGlassSettings(data.glass)
+      if (cancelled) return
+      if (data.glass) setGlassSettings(data.glass)
+      if (data.source_mode === 'yandex') {
+        setSourceMode('yandex')
+        setActiveView((v) => (v === 'library' || v === 'playlists' ? 'ym-browse' : v))
+      }
     }).catch(() => {})
     return () => { cancelled = true }
-  }, [connected, setGlassSettings])
+  }, [connected, setGlassSettings, setSourceMode])
+
+  // ── Yandex Music session state (the backend restores a saved token on its own) ──
+  useEffect(() => {
+    if (!connected) return
+    yandexApi.status().then(setYandexStatus).catch(() => {})
+  }, [connected, setYandexStatus])
 
   // ── Drag/drop for DynamicIsland ──
   useEffect(() => {
@@ -318,6 +335,9 @@ function App() {
         {activeView === 'lyrics' && <LyricsView />}
         {activeView === 'queue' && <QueueView />}
         {activeView === 'settings' && <SettingsView />}
+        {activeView === 'ym-browse' && <YandexView key="ym-browse" tab="browse" />}
+        {activeView === 'ym-search' && <YandexView key="ym-search" tab="search" />}
+        {activeView === 'ym-collection' && <YandexView key="ym-collection" tab="collection" />}
       </main>
 
       {/* Layer 2: Dynamic Island — fixed top center */}
